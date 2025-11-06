@@ -29,7 +29,7 @@ import { ExtensionOsLogin } from "./settings/ExtensionOsLogin";
 export const providersData = {
   providers: [
     {
-      name: "extension | OS",
+      name: "Siddhi",
       models: [
         "llama-3.3-70b-versatile",
         "llama-3.1-8b-instant",
@@ -175,6 +175,18 @@ export const providersData = {
       name: "localhost",
       models: ["llama3"],
     },
+    {
+      name: "gemini",
+      models: [
+        "gemini-2.0-flash-exp",
+        "gemini-exp-1206",
+        "gemini-2.0-flash-thinking-exp-1219",
+        "gemini-exp-1121",
+        "gemini-1.5-pro",
+        "gemini-1.5-flash",
+        "gemini-1.5-flash-8b",
+      ],
+    },
   ],
 };
 
@@ -185,7 +197,7 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
   );
   const [llmProvider, setLlmProvider] = useStorage(
     "llmProvider",
-    "extension | OS"
+    "Siddhi"
   );
   const [llmKeys, setLlmKeys] = useStorage("llmKeys", {});
   const [llmCustomEndpoint, setLlmCustomEndpoint] = useStorage(
@@ -234,7 +246,7 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
         <CardHeaderIntro
           title={"LLM Settings"}
           description={
-            " Provide which provider and model you want to use for Extension | OS"
+            " Provide which provider and model you want to use for Siddhi"
           }
         />
       </CardHeader>
@@ -243,7 +255,7 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
           <ProviderInstruction provider={llmProvider} />
           {!getCurrentKey() &&
             llmProvider &&
-            llmProvider !== "extension | OS" && (
+            llmProvider !== "Siddhi" && (
               <>
                 {/* UX Note: This arrow indicates where users should click to obtain their API keys. */}
                 <ArrowBigLeftDash
@@ -280,7 +292,7 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                   </SelectContent>
                 </Select>
 
-                {llmProvider === "extension | OS" && <ExtensionOsLogin />}
+                {llmProvider === "Siddhi" && <ExtensionOsLogin />}
 
                 {!llmProvider && (
                   <>
@@ -371,7 +383,7 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
               llmProvider === provider.name && (
                 <div key={provider.name}>
                   {provider.models.length > 0 &&
-                  provider.name !== "extension | OS" &&
+                  provider.name !== "Siddhi" &&
                   provider.name !== "localhost" ? (
                     <div className="flex flex-col gap-1">
                       <LabelWithTooltip
@@ -389,7 +401,7 @@ export default function LlmSettings({ debugInfo }: { debugInfo: string }) {
                         }
                       />
                     </div>
-                  ) : // Extension | OS do not need API key as it's integrated
+                  ) : // Siddhi do not need API key as it's integrated
                   null}
                 </div>
               )

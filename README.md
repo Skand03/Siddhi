@@ -1,28 +1,25 @@
-# Extension | OS
+# Siddhi - Your AI Partner
 
 ![logo](./assets/presentation.png)
 
-⭐️ Welcome to Extension | OS
+![Version](https://img.shields.io/badge/version-0.0.27-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+
+⭐️ **AI at Your Fingertips, Anytime, Anywhere.**
 
 ## **Tired of the endless back-and-forth with ChatGPT, Claude, and other AI tools just to repeat the same task over and over?**
 
-You're not alone! I felt the same frustration, so I built a solution: **Extension | OS**—an open-source browser extension that makes AI accessible directly where you need it.
+You're not alone! I felt the same frustration, so I built a solution: **Siddhi**—an open-source browser extension that makes AI accessible directly where you need it.
 
 **Imagine**: You create a prompt like "Fix the grammar for this text," right-click, and job done—no more switching tabs, no more wasted time.
 
 ![](./assets/showcase/demo.gif)
 
-> Imagine a world where every user has access to powerful models (LLMs and more) directly within their web browser. By integrating AI into everyday internet browsing, we can revolutionise the way people interact with information online, providing them with instant, intelligent assistance tailored to their needs.
+> Imagine a world where every user has access to powerful models (LLMs and more) directly within their web browser. By integrating AI into everyday internet browsing, we can revolutionize the way people interact with information online, providing them with instant, intelligent assistance tailored to their needs.
 
-## Pre-release on Google Chrome Store
+## 🌟 About Siddhi
 
-Join an exclusive group of up to 100 early adopters and be among the first to experience the future of AI-powered browsing!
-
-[![Download on Chrome Web Store](./assets/AppIcons/chrome-store.png)](https://chromewebstore.google.com/detail/bahjnakiionbepnlbogdkojcehaeefnp)
-
-[link-chrome]: https://chromewebstore.google.com/detail/bahjnakiionbepnlbogdkojcehaeefnp "Version published on Chrome Web Store"
-
-- [<img valign="middle" src="https://img.shields.io/chrome-web-store/v/bahjnakiionbepnlbogdkojcehaeefnp.svg?label=%20">][link-chrome] also compatible with [<img src="./assets/AppIcons/edge.svg" width="24" alt="Edge" valign="middle">][link-chrome] [<img src="./assets/AppIcons/opera.svg" width="24" alt="Opera" valign="middle">][link-chrome] [<img src="./assets/AppIcons/brave.svg" width="24" alt="Brave" valign="middle">][link-chrome]
+**Siddhi** is your AI companion in the browser, built on the foundation of Extension | OS with enhanced features and a fresh identity. Compatible with Chrome, Edge, Opera, and Brave browsers.
 
 ## 📸 Screenshots
 
@@ -38,30 +35,90 @@ Customize your look and feel, and unleash your creativity with your own prompts!
 Mixture of Agents (pre-release)
 ![Mixture Of Agents](./assets/showcase/moa.png)s
 
-## Help me grow this extension
+## 👨‍💻 Author
 
-Use my affiliation code when you sign-up on VAPI: https://vapi.ai/?aff=extension-os
+**Skand Chaubey**
+- Email: skandchaubey03@gmail.com
+- GitHub: [@Skand03](https://github.com/Skand03)
 
-## 🚀 Getting started
+## 🚀 Getting Started
 
-1. Clone the extension or [download the latest release](https://github.com/albertocubeddu/extensionOS/releases/).
-2. Open the Chrome browser and navigate to [chrome://extensions](chrome://extensions).
-3. Enable the developer mode by clicking the toggle switch in the top right corner of the page.
-4. Unpack/Unzip the `chrome-mv3-prod.zip`
-5. Click on the "Load unpacked" button and select the folder you just unzipped.
-6. The options page automatically opens, insert your API keys.
+### For Development
+
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/Skand03/Siddhi.git
+   cd Siddhi
+   ```
+
+2. **Install Dependencies**
+   ```bash
+   pnpm install
+   ```
+
+3. **Start Development Server**
+   ```bash
+   pnpm dev
+   ```
+
+4. **Load in Browser**
+   - Open Chrome and navigate to [chrome://extensions](chrome://extensions)
+   - Enable the developer mode (toggle in top-right corner)
+   - Click "Load unpacked"
+   - Select the `build/chrome-mv3-dev` folder
+
+5. **Configure API Keys**
+   - The options page automatically opens
+   - Go to LLM Settings
+   - Choose your AI provider and insert your API key
 
 ## ✨ Features
 
-- **Prompt Factory**: Effortlessly Tailor Every Prompt to Your Needs with Our Standard Installation.
-- **Prompt Factory**: Choose the Functionality for Every Prompt: From Copy-Pasting to Opening a New Sidebar.
-- **Seamless Integration**: Effortlessly access any LLM model directly from your favorite website.
-- **Secure Storage**: Your API key is securely stored in the browser's local storage, ensuring it never leaves your device.
-- **[Beta] Mixture of Agents**: Experience the innovative Mixture Of Agents feature.
+- **🎯 Smart Text Selection Menu**: Right-click any selected text to access AI-powered actions instantly
+- **🤖 Multiple AI Providers**: Support for Siddhi, Google Gemini, OpenAI, Groq, Together AI, and localhost (Ollama)
+- **📋 Built-in Actions**: Comment Post, Grammar Fixer, Summarize Text, Voice Discussion, Emoji Comments
+- **⚙️ Prompt Factory**: Create, edit, and customize your own AI prompts
+- **🔐 Secure Storage**: API keys are stored locally in your browser, never leaving your device
+- **🎨 Customizable UI**: Toggle features on/off, customize appearance
+- **[Beta] Mixture of Agents**: Experience innovative multi-agent AI collaboration
 
-## Why
+## 🎨 Usage
 
-On the morning of July 27th, 2024, I began an exciting journey by joining the SF Hackathon x Build Club. After months of refining the concept in my mind, I decided it was time to bring it to life. I worked on enhancing my idea, updating what I had already created, and empowering everyone to unleash their creativity with custom prompts.
+### Quick Start Guide
+
+1. **Configure AI Provider**
+   - Click the Siddhi extension icon
+   - Go to Options → LLM Settings
+   - Choose a provider (Gemini recommended for free tier)
+   - Enter your API key
+
+2. **Use Text Selection**
+   - Go to any webpage
+   - Select text (at least 2 words)
+   - Right-click or use the floating menu
+   - Choose an AI action
+
+3. **Customize Prompts**
+   - Options → Prompt Factory
+   - Edit existing prompts or create new ones
+   - Save your changes
+
+### Getting API Keys
+
+#### Google Gemini (Free & Recommended)
+1. Visit [Google AI Studio](https://aistudio.google.com/app/apikey)
+2. Click "Create API Key"
+3. Copy and paste into Siddhi
+
+#### OpenAI
+1. Visit [OpenAI Platform](https://platform.openai.com/api-keys)
+2. Create an API key
+3. Add to Siddhi settings
+
+#### Groq
+1. Visit [Groq Console](https://console.groq.com/keys)
+2. Generate API key
+3. Configure in Siddhi
 
 ### Data - Awareness
 
@@ -115,71 +172,34 @@ Run `docker run` with the `-e` flag to set the `OLLAMA_ORIGINS` environment vari
 docker run -e OLLAMA_ORIGINS="chrome-extension://bahjnakiionbepnlbogdkojcehaeefnp" -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
 ```
 
-## To-Do List
+## 🤝 Contributing
 
-Move it somewhere else ASAP:
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-- https://github.com/rowyio/roadmap?tab=readme-ov-file#step-1-setup-backend-template
-- https://canny.io
-- https://sleekplan.com/
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-### Urgent & Important
+## 📞 Support
 
-- [ ] **Logging**: Determine a location to store log files.
+If you encounter any issues or have questions:
+- Open an issue on [GitHub](https://github.com/Skand03/Siddhi/issues)
+- Email: skandchaubey03@gmail.com
 
-### Urgent, Not Important
+## 🙏 Acknowledgments
 
-- [ ] **Prompt Factory**: Add the ability to create custom prompts.
-- [ ] Add the ability to chat within the browser.
-- [ ] Encryption of keys : They are stored locally, nonetheless being my first chrome extension i need to research more about how this can be accessed.
-- [ ] Automated Testing
-- [ ] Investigate if Playwright supports Chrome extension testing.
-- [ ] Automated Tagging / Release
-- [ ] Locale
+- Built with [Plasmo Framework](https://www.plasmo.com/)
+- UI Components from [shadcn/ui](https://ui.shadcn.com/)
+- Based on the original Extension-OS project by Alberto Cubeddu
+- Special thanks to Build Club, Leonardo.ai, Canva, and all contributors
 
-### Important, Not Urgent
+---
 
-- [ ] UI for the Prompt Factory is not intuitive and the "save all" button UX is cr@p.
-- [ ] The sidebar API doesn't work after the storage API is called (User Interaction must be done)
-- [ ] Move files to a `/src` folder to improve organization.
-- [ ] Strategically organize the codebase structure.
-- [ ] Decide on a package manager: npm, pnpm, or yarn.
+Made with ❤️ by Skand Chaubey
 
-### Not Urgent, Not Important
-
-- [ ] Workflow to update the models automatically.
-- [ ] **Prompt Factory**: Add the ability to build workflows.
-- [ ] **Prompt Factory**: Add the option to select which LLM to use for each prompt.
-- [ ] Remove all the silly comments, maybe one day....
-
-# Youtube Video From the Hackathon
-
-[![Extesion | OS - San Francisco Presso](https://img.youtube.com/vi/dM1BOxVoebg/0.jpg)](https://www.youtube.com/watch?v=dM1BOxVoebg)
-
-## Footage
-
-- [Olena from Pixabay](https://pixabay.com/users/olenchic-16658974/?utm_source=link-attribution&utm_medium=referral&utm_campaign=video&utm_content=218486)
-
-- [NickyPe from Pixabay](https://pixabay.com/users/nickype-10327513/?utm_source=link-attribution&utm_medium=referral&utm_campaign=video&utm_content=161402)
-
-## Music
-
-- https://suno.com/song/f14541af-c853-4c22-b0b7-9000194fc9c6
-
-## Voices
-
-- ElevenLabs
-
-# Special Thanks
-
-- Build Club -> Hackaton Organiser
-- Leonardo.ai -> Icon generated with the phoenix model
-- Canva -> The other images not generated with AI
-- ShadCn -> All the UI?
-- Plasmo -> The Framework
-- Groq -> Extra credits
-- Icons -> icons8
-- https://shadcnui-expansions.typeart.cc/
+*Based on Extension | OS - Originally created for the SF Hackathon x Build Club*
 
 # Changelog
 
@@ -350,9 +370,18 @@ Move it somewhere else ASAP:
 - The Plasmo handler may stop functioning unexpectedly without errors if a response is not returned; ensure to always return a response to prevent this issue.
 
 
-# Deployment Instruction for production
-- Google Store: https://chrome.google.com/webstore/devconsole/2415d173-bc87-467d-aca3-0fbd673ef09f/bahjnakiionbepnlbogdkojcehaeefnp/edit/package
+## 📦 Building for Production
 
-- pnpm run package
+```bash
+# Package the extension
+pnpm run package
 
-- upload the package to the store
+# Output will be in build/chrome-mv3-prod.zip
+```
+
+## 🧪 Testing
+
+```bash
+# Run automated tests
+pnpm test
+```

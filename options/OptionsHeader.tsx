@@ -13,7 +13,9 @@ export default function OptionsHeader() {
                     <a
                         href="#"
                         className="text-white transition-colors hover:text-grey text-3xl ">
-                        Extension | OS - Configuration
+                        <title>
+                        Siddhi - Configuration
+                    </title>
                     </a>
                 </nav>
                 <Sheet>
@@ -36,10 +38,10 @@ export default function OptionsHeader() {
                                     src={extensionAvatar}
                                     alt="Some pretty cool image"
                                 />
-                                <span className="sr-only"> Extension | OS</span>
+                                <span className="sr-only"> Siddhi</span>
                             </a>
                             <a href="#" className="hover:text-foreground">
-                                Extension | OS
+                                Siddhi
                             </a>
                         </nav>
                     </SheetContent>

@@ -99,7 +99,7 @@ export default function OptionsPromptFactory() {
         <div className="grid gap-6">
             <Card x-chunk="dashboard-04-chunk-2">
                 <CardHeader>
-                    <CardHeaderIntro title={"Prompt Factory"} description={"  Welcome to the Prompt Factory, where you can set new prompts in the Extension | OS. The section it's in is early version, and it will allow to add/remove and modify every prompt."} />
+                    <CardHeaderIntro title={"Prompt Factory"} description={"  Welcome to the Prompt Factory, where you can set new prompts in Siddhi. The section it's in is early version, and it will allow to add/remove and modify every prompt."} />
                 </CardHeader>
                 <CardContent>
                     {contextMenuItems ? (
@@ -172,7 +172,7 @@ export default function OptionsPromptFactory() {
                                                 <Alert className="mt-1">
                                                     <AlertTitle className="text-[#f6c]">Heads up!</AlertTitle>
                                                     <AlertDescription>
-                                                        When you choose "Selection" as the Context, any text you highlight while using Extension | OS will be added to the end of your prompt automatically.
+                                                        When you choose "Selection" as the Context, any text you highlight while using Siddhi will be added to the end of your prompt automatically.
                                                     </AlertDescription>
                                                 </Alert>
                                                 <div className="text-sm text-white">

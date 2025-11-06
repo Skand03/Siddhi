@@ -23,7 +23,7 @@ export default function OptionsSettings() {
         <div className="grid gap-6 text-lg">
             <Card x-chunk="dashboard-04-chunk-2">
                 <CardHeader>
-                    <CardHeaderIntro title={"Settings"} description={"Customise the look and feel of Extension | OS"} />
+                    <CardHeaderIntro title={"Settings"} description={"Customise the look and feel of Siddhi"} />
                 </CardHeader>
                 <CardContent>
                     Experience the perfect blend of simplicity and power with our tool—designed to be user-friendly while effortlessly handling complex tasks.

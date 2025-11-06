@@ -16,10 +16,11 @@ async function vendorToEndpoint(vendor: string): Promise<string> {
    }
 
    const endpoints: { [key: string]: string } = {
-      "extension | OS": process.env.PLASMO_PUBLIC_EXTENSION_OS_API_ENDPOINT,
+      "Siddhi": process.env.PLASMO_PUBLIC_EXTENSION_OS_API_ENDPOINT,
       openai: "https://api.openai.com/v1/chat/completions",
       groq: "https://api.groq.com/openai/v1/chat/completions",
       together: "https://api.together.xyz/v1/chat/completions",
+      gemini: "https://generativelanguage.googleapis.com/v1beta/models/MODEL_NAME:generateContent",
    };
 
    return endpoints[vendor] || endpoints["groq"];
@@ -27,7 +28,7 @@ async function vendorToEndpoint(vendor: string): Promise<string> {
 
 // Constants
 const DEFAULT_MODEL = "llama-3.1-70b-versatile";
-const DEFAULT_VENDOR = "extension | OS";
+const DEFAULT_VENDOR = "Siddhi";
 
 // TODO: move somewhere else
 const getAccessToken = async (): Promise<string> => {
@@ -78,21 +79,39 @@ export async function callOpenAIReturn(
       const openAIModel = overrideModel || storedModel;
       const vendor = overrideProvider || storedVendor;
       const apiKey = llmKeys ? llmKeys[vendor] : "";
-      const openAIEndpoint = await vendorToEndpoint(vendor);
+      let openAIEndpoint = await vendorToEndpoint(vendor);
 
       const headers = new Headers({
          "Content-Type": "application/json",
-         Authorization: `Bearer ${apiKey || (await getAccessToken())}`,
       });
 
-      const bodyReq = JSON.stringify({
-         model: openAIModel,
-         messages: [
-            { role: "system", content: systemPrompt }, // The prompt defined by the user
-            { role: "user", content: message }, // The text selected by the user
-         ],
-         stream: false,
-      });
+      let bodyReq;
+
+      if (vendor === "gemini") {
+         // Gemini uses its own native API format
+         openAIEndpoint = openAIEndpoint.replace("MODEL_NAME", openAIModel);
+         openAIEndpoint = `${openAIEndpoint}?key=${apiKey}`;
+         
+         bodyReq = JSON.stringify({
+            contents: [{
+               parts: [{
+                  text: `${systemPrompt}\n\n${message}`
+               }]
+            }]
+         });
+      } else {
+         // OpenAI-compatible format for other providers
+         headers.set("Authorization", `Bearer ${apiKey || (await getAccessToken())}`);
+         
+         bodyReq = JSON.stringify({
+            model: openAIModel,
+            messages: [
+               { role: "system", content: systemPrompt },
+               { role: "user", content: message }
+            ],
+            stream: false,
+         });
+      }
 
       const response = await fetch(openAIEndpoint, {
          method: "POST",
@@ -100,7 +119,26 @@ export async function callOpenAIReturn(
          body: bodyReq,
       });
 
-      const data = await response.json();
+      let data;
+      try {
+         data = await response.json();
+      } catch (parseError) {
+         console.error("Failed to parse response:", await response.text());
+         throw new Error(`API returned invalid JSON (Status: ${response.status})`);
+      }
+
+      // Log detailed error information for debugging
+      if (!response.ok) {
+         console.error("API Error Details:", {
+            status: response.status,
+            statusText: response.statusText,
+            vendor: vendor,
+            model: openAIModel,
+            endpoint: openAIEndpoint.split('?')[0], // Hide API key in logs
+            responseData: data,
+            requestBody: JSON.parse(bodyReq)
+         });
+      }
 
       //Open the option page if the request is unauthorised; Most of the time the user didn't insert the right API keys.
       if (response.status === 401) {
@@ -110,7 +148,7 @@ export async function callOpenAIReturn(
       }
 
       //Extension-os.com || Free Tier Exhausted
-      if (response.status === 403 && vendor === "extension | OS") {
+      if (response.status === 403 && vendor === "Siddhi") {
          chrome.tabs.query(
             { active: true, currentWindow: true },
             function (tabs) {
@@ -127,18 +165,48 @@ export async function callOpenAIReturn(
       }
 
       if (!response.ok) {
+         // Get detailed error message - handle different API error formats
+         let errorMsg = 'Unknown error';
+         
+         if (data.error) {
+            // OpenAI, Groq format: { error: { message: "...", type: "..." } }
+            errorMsg = data.error.message || data.error.type || JSON.stringify(data.error);
+         } else if (data.message) {
+            // Some APIs use { message: "..." }
+            errorMsg = data.message;
+         } else if (data.detail) {
+            // Some APIs use { detail: "..." }
+            errorMsg = data.detail;
+         } else if (typeof data === 'string') {
+            errorMsg = data;
+         } else {
+            errorMsg = `${response.statusText} - ${JSON.stringify(data)}`;
+         }
+         
          throw new Error(
-            data.error?.message ||
-               `3rd party API repsponded with HTTP error status: ${response.status}`
+            `API Error (${response.status}): ${errorMsg}`
          );
       }
 
-      if (!data.choices?.length) {
-         throw new Error("Unexpected response structure");
+      // Parse response based on vendor
+      let responseText;
+      if (vendor === "gemini") {
+         // Gemini format: { candidates: [{ content: { parts: [{ text: "..." }] } }] }
+         if (!data.candidates?.length || !data.candidates[0].content?.parts?.length) {
+            throw new Error("Unexpected response structure from Gemini API");
+         }
+         responseText = data.candidates[0].content.parts[0].text;
+      } else {
+         // OpenAI format: { choices: [{ message: { content: "..." } }] }
+         if (!data.choices?.length) {
+            throw new Error("Unexpected response structure from API");
+         }
+         responseText = data.choices[0].message.content;
       }
 
-      return { data: data.choices[0].message.content };
+      return { data: responseText };
    } catch (error) {
+      console.error("API Call Error:", error);
       return {
          errorMessage: error instanceof Error ? error.message : String(error),
       };

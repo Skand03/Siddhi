@@ -10,7 +10,7 @@ export default function OptionsAbout() {
         <div className="grid gap-6 text-lg">
             <Card x-chunk="dashboard-04-chunk-2">
                 <CardHeader>
-                    <CardHeaderIntro title={"Why Extension | OS?"} description={"Extension | OS has been created during the SF Hackaton x Build Club."} />
+                    <CardHeaderIntro title={"Why Siddhi?"} description={"Siddhi has been created during the SF Hackaton x Build Club."} />
                 </CardHeader>
                 <CardContent>
                     It all started a morning on the 27th July 2024 when I decided to partecipate to the San Francisco Hackaton organised by the build club.

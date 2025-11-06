@@ -91,7 +91,16 @@ const SelectionMenu = () => {
             name: "callOpenAIReturn",
             body: { prompt: element.prompt, selectedText }
         });
-        await sendToBackground({ name: "sendToSidepanel", body: { ...response } });
+        
+        // Send either the data or the error message to sidebar
+        const messageToSend = response.errorMessage 
+            ? `❌ Error: ${response.errorMessage}` 
+            : response.data;
+            
+        await sendToBackground({ 
+            name: "sendToSidepanel", 
+            body: { data: messageToSend } 
+        });
     };
 
 

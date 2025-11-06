@@ -14,7 +14,7 @@ import ollama from "data-base64:~assets/AppIcons//ollama.png";
 import InstructionSnippet from "./components/InstructionSnippet";
 
 const providerData = {
-  "extension | OS": {
+  "Siddhi": {
     logo: extensionOsLogo,
     links: [
       { label: "Official Website", url: "https://extension-os.com" },
@@ -43,6 +43,13 @@ const providerData = {
         label: "Get API Key",
         url: "https://api.together.ai/settings/api-keys",
       },
+    ],
+  },
+  gemini: {
+    logo: openAiLogo, // You can add a Gemini logo later
+    links: [
+      { label: "Official Website", url: "https://ai.google.dev" },
+      { label: "Get API Key", url: "https://aistudio.google.com/app/apikey" },
     ],
   },
   localhost: {
