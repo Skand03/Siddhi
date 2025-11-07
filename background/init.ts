@@ -253,57 +253,6 @@ Code to document:
          functionType: "callAI-openSideBar",
       },
       {
-         id: "side_videoSummary",
-         title: "🎥 Extract Video Details",
-         contexts: ["selection"],
-         prompt: `Analyze the following video transcript, description, or content and create a comprehensive, accurate summary from start to finish.
-
-**CRITICAL INSTRUCTIONS:**
-- Use the EXACT words and phrases from the video content
-- Maintain the original sequence of topics as they appear in the video
-- Preserve specific terminology, numbers, names, and technical terms
-- Do NOT paraphrase or use different words - stay true to the original content
-- Include timestamps if available
-- Capture all key points from beginning to end
-
-**Provide your response in this format:**
-
-**📺 Video Title/Topic:**
-[Main topic or title of the video]
-
-**⏱️ Duration/Length:**
-[Total length if mentioned]
-
-**📋 Complete Summary (Start to Finish):**
-
-**Introduction (0:00 - X:XX):**
-- [Exact key points using original words]
-- [Main concepts introduced]
-
-**Main Content:**
-- [Section 1 with exact details and terminology]
-- [Section 2 with exact details and terminology]
-- [Continue for all major sections]
-
-**Key Takeaways:**
-• [Important point 1 - using exact words from video]
-• [Important point 2 - using exact words from video]
-• [Important point 3 - using exact words from video]
-
-**Important Details:**
-- [Specific numbers, data, or facts mentioned]
-- [Names, dates, or references]
-- [Technical terms or definitions]
-
-**Conclusion:**
-[Final thoughts or closing remarks from the video]
-
-Video content to analyze:
-
-`,
-         functionType: "callAI-openSideBar",
-      },
-      {
          id: "callPhoneToTalkAboutSelection",
          title: "📱 Let's Talk about this",
          contexts: ["selection"],
@@ -322,6 +271,48 @@ Text to discuss:
 
 `,
          functionType: "callVoice-ExternalNumber",
+      },
+      {
+         id: "side_extractVideoDetails",
+         title: "🎬 Extract Video Details",
+         contexts: ["selection"],
+         prompt: `Extract and summarize all the important details from this video content. Be extremely accurate and only include information that is EXACTLY mentioned in the provided text.
+
+Provide your response in this format:
+
+**📹 Video Title:**
+[Extract the exact video title if mentioned]
+
+**👤 Creator/Channel:**
+[Extract the exact creator or channel name if mentioned]
+
+**📝 Summary:**
+[Provide a clear, concise summary of what the video is about based ONLY on the information provided - do not add or assume anything]
+
+**🔑 Key Points:**
+- [Extract each main point or topic covered - use exact words/phrases from the video]
+- [List specific details, timestamps, or important information mentioned]
+- [Include any specific data, statistics, or facts that were stated]
+
+**💡 Main Takeaways:**
+- [Extract the key lessons or insights - word-for-word where possible]
+- [Only include what is explicitly stated in the content]
+
+**🎯 Target Audience:**
+[Who is this video for, based on the content provided]
+
+**⏱️ Duration/Timestamps:**
+[Include any time markers or duration mentioned]
+
+**🔗 Additional Info:**
+[Any other relevant details like links, resources, or references that were specifically mentioned]
+
+IMPORTANT: Extract ONLY the information that is present in the provided text. Do not make assumptions, add interpretations, or include information that is not explicitly stated.
+
+Video content to extract:
+
+`,
+         functionType: "callAI-openSideBar",
       },
       {
          id: "linkedinPostEmoji",
