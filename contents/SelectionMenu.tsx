@@ -157,6 +157,7 @@ const SelectionMenu = () => {
             const contextConfigItems =
                 (await initializeStorage()) as unknown as chrome.contextMenus.CreateProperties[];
             const cleanedContextMenuItems = cleanProperties(contextConfigItems);
+            console.log('SelectionMenu: Loaded menu items:', cleanedContextMenuItems);
             setMenuItems(cleanedContextMenuItems)
         }
         initialize();
@@ -190,11 +191,15 @@ const SelectionMenu = () => {
                         <CommandList>
                             <CommandEmpty>No results found.</CommandEmpty>
                             <CommandGroup >
-                                {menuItems.map((item) => (
-                                    <CommandItem className="cursor-pointer opacity-50 hover:opacity-100 hover:bg-[#505050] font-bold m-1 rounded-[5px] py-1 text-[16px]" key={item.id} value={item.title} onSelect={() => handleMenuItemClick(item)}>
-                                        <span className="text-white">{item.title}</span>
-                                    </CommandItem>
-                                ))}
+                                {menuItems.length === 0 ? (
+                                    <div className="text-white p-4">Loading options...</div>
+                                ) : (
+                                    menuItems.map((item) => (
+                                        <CommandItem className="cursor-pointer opacity-50 hover:opacity-100 hover:bg-[#505050] font-bold m-1 rounded-[5px] py-1 text-[16px]" key={item.id} value={item.title} onSelect={() => handleMenuItemClick(item)}>
+                                            <span className="text-white">{item.title}</span>
+                                        </CommandItem>
+                                    ))
+                                )}
                             </CommandGroup>
                         </CommandList>
                     </Command>
