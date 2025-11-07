@@ -31,8 +31,21 @@ export async function initializeStorage() {
          id: "postComment",
          title: "💬 Comment Post",
          contexts: ["selection"],
-         prompt:
-            "Create a short, engaging comment in response to this social media post. Keep it conversational and relevant. Provide only the comment text without quotation marks or extra formatting.\n\n",
+         prompt: `Read the following social media post carefully and create a thoughtful, relevant comment that directly responds to the content.
+
+Instructions:
+- Analyze the main topic, sentiment, and key points of the post
+- Write a natural, conversational comment that adds value or shows genuine engagement
+- Match the tone of the post (professional, casual, humorous, supportive, etc.)
+- Keep it concise (1-3 sentences maximum)
+- Be authentic and specific to what was actually said in the post
+- Do NOT use generic responses like "Great post!" or "Thanks for sharing"
+- Do NOT use quotation marks, hashtags, or extra formatting
+- Provide ONLY the comment text, nothing else
+
+Post to comment on:
+
+`,
          functionType: "callAI-copyClipboard",
       },
       {
