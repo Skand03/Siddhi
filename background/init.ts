@@ -202,24 +202,55 @@ Code/Error to fix:
          id: "side_codeConvert",
          title: "🔄 Convert Code",
          contexts: ["selection"],
-         prompt: `Convert the following code to another programming language. Assume the target language is JavaScript unless another language is explicitly mentioned in the code.
+         prompt: `Convert the selected code to another programming language.
 
-Provide your response in this format:
+**Step 1: Detect Original Language**
+First, identify what language the code is written in.
 
-**Original Language:** [Name of the original language]
+**Step 2: Show Language Options**
+Present the following options with clear numbering and emojis:
 
-**Target Language:** [Name of the target language]
+---
+**🎯 Select Target Language:**
 
-**Converted Code:**
+1. 🟨 **JavaScript** - Modern ES6+
+2. 🐍 **Python** - Python 3.x
+3. ☕ **Java** - Java 11+
+4. ⚡ **C++** - C++17/20
+5. 🔷 **C#** - .NET 6+
+6. 💙 **TypeScript** - Latest
+7. 🔵 **Go** - Go 1.20+
+8. 🦀 **Rust** - Latest
+9. 🐘 **PHP** - PHP 8+
+10. 💎 **Ruby** - Ruby 3+
+11. 🍎 **Swift** - Swift 5+
+12. 🤖 **Kotlin** - Latest
+13. 🔢 **R** - For data science
+14. 🎨 **Dart** - Flutter
+15. ⚙️ **Other** - Specify below
+
+---
+
+After user selects, provide the conversion with this professional format:
+
+**📝 Original Language:** [Detected language]
+
+**🎯 Target Language:** [User's choice]
+
+**✅ CONVERTED CODE:**
 
 \`\`\`[target-language]
-[Complete converted code here - fully functional and ready to use]
+[Complete, working, production-ready converted code]
 \`\`\`
 
-**Key Changes:**
-- [Explain important conversions or differences]
-- [Note any assumptions made]
-- [Highlight syntax or structure changes]
+**🔄 Key Changes:**
+- [List specific syntax changes]
+- [Note library/framework equivalents]
+- [Explain structural differences]
+- [Highlight language-specific optimizations]
+
+**💡 Important Notes:**
+[Dependencies needed, setup instructions, or caveats]
 
 Code to convert:
 
@@ -271,48 +302,6 @@ Text to discuss:
 
 `,
          functionType: "callVoice-ExternalNumber",
-      },
-      {
-         id: "side_extractVideoDetails",
-         title: "🎬 Extract Video Details",
-         contexts: ["selection"],
-         prompt: `Extract and summarize all the important details from this video content. Be extremely accurate and only include information that is EXACTLY mentioned in the provided text.
-
-Provide your response in this format:
-
-**📹 Video Title:**
-[Extract the exact video title if mentioned]
-
-**👤 Creator/Channel:**
-[Extract the exact creator or channel name if mentioned]
-
-**📝 Summary:**
-[Provide a clear, concise summary of what the video is about based ONLY on the information provided - do not add or assume anything]
-
-**🔑 Key Points:**
-- [Extract each main point or topic covered - use exact words/phrases from the video]
-- [List specific details, timestamps, or important information mentioned]
-- [Include any specific data, statistics, or facts that were stated]
-
-**💡 Main Takeaways:**
-- [Extract the key lessons or insights - word-for-word where possible]
-- [Only include what is explicitly stated in the content]
-
-**🎯 Target Audience:**
-[Who is this video for, based on the content provided]
-
-**⏱️ Duration/Timestamps:**
-[Include any time markers or duration mentioned]
-
-**🔗 Additional Info:**
-[Any other relevant details like links, resources, or references that were specifically mentioned]
-
-IMPORTANT: Extract ONLY the information that is present in the provided text. Do not make assumptions, add interpretations, or include information that is not explicitly stated.
-
-Video content to extract:
-
-`,
-         functionType: "callAI-openSideBar",
       },
       {
          id: "linkedinPostEmoji",
