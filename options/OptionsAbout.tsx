@@ -10,10 +10,10 @@ export default function OptionsAbout() {
         <div className="grid gap-6 text-lg">
             <Card x-chunk="dashboard-04-chunk-2">
                 <CardHeader>
-                    <CardHeaderIntro title={"Why Siddhi?"} description={"Siddhi has been created during the SF Hackaton x Build Club."} />
+                    <CardHeaderIntro title={"Why Siddhi?"} description={"Siddhi has been created during the X Fair Hackathon."} />
                 </CardHeader>
                 <CardContent>
-                    It all started a morning on the 27th July 2024 when I decided to partecipate to the San Francisco Hackaton organised by the build club.
+                    It all started on 7th November 2025 when I decided to participate in the X Fair Hackathon, bringing AI-powered assistance to everyone's fingertips.
                 </CardContent>
             </Card>
 
@@ -74,7 +74,7 @@ export default function OptionsAbout() {
                     Visit my{" "}
                     <a
                         className="text-blue-600"
-                        href="https://www.linkedin.com/in/alberto-cubeddu/"
+                        href="https://www.linkedin.com/in/skand-chaubey-30b51024b"
                         target="_blank"
                         rel="noopener noreferrer">
                         LinkedIn
