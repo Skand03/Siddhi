@@ -163,19 +163,18 @@ Claim to verify:
          contexts: ["selection"],
          prompt: `You are analyzing a stack trace or error message. Return ONLY a single JSON object with no additional text, comments, or markdown.
 
-The JSON must follow this exact schema with ONLY these 4 fields (do NOT include confidence_score):
+The JSON must follow this exact schema with ONLY these 3 fields:
 
 {
   "action_type": "DEBUG_FIX",
   "result_data": {
     "error_summary": "[A concise, one-sentence summary of the root cause]",
     "explanation": "[Detailed explanation of why the error occurred]",
-    "suggested_fix_code": "[Complete corrected code snippet or clear fix example]",
-    "language": "[Programming language, e.g., Python, JavaScript]"
+    "suggested_fix_code": "[Complete corrected code snippet or clear fix example]"
   }
 }
 
-Do not add any extra fields like confidence_score.
+Do not add any extra fields like language or confidence_score.
 
 Error to analyze:
 
