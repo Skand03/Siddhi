@@ -61,7 +61,7 @@ Text to fix:
       },
       {
          id: "side_summariseText",
-         title: "🔥 Summarise Text",
+         title: "🔥 Summarise Selection",
          contexts: ["selection"],
          prompt: `Analyze the following content and create an accurate, comprehensive summary that captures all key information.
 
@@ -80,6 +80,30 @@ Instructions:
 Provide a well-structured summary that someone could read to understand the complete essence of the original content.
 
 Text to summarize:
+
+`,
+         functionType: "callAI-openSideBar",
+      },
+      {
+         id: "side_summarisePage",
+         title: "📄 Summarise This Page",
+         contexts: ["page"],
+         prompt: `Analyze the entire webpage content and create an accurate, comprehensive summary.
+
+Instructions:
+- Extract and read ALL visible text content from the page
+- Identify the main topic, purpose, and key sections of the page
+- Preserve the original structure and organization
+- Maintain the same formatting style (paragraphs, lists, headers)
+- Include specific numbers, dates, names, and technical terms exactly as they appear
+- Capture all important information, facts, and details
+- Do NOT add opinions or information not present on the page
+- Do NOT skip important sections
+- Write in clear, natural language
+
+Provide a complete summary organized by sections that captures the essence of the entire page.
+
+Page content to summarize:
 
 `,
          functionType: "callAI-openSideBar",
