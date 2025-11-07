@@ -116,93 +116,158 @@ const FormattedContent = ({ content, theme }: { content: string; theme: "light" 
             )
         }
 
-        // Otherwise, render as formatted text with markdown support
-        const lines = content.split('\n')
-        return lines.map((line, index) => {
-            // Code blocks
-            if (line.trim().startsWith('```')) {
-                const lang = line.trim().substring(3)
+        // Handle code blocks first (```language ... ```)
+        const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g
+        const parts = []
+        let lastIndex = 0
+        let match
+
+        while ((match = codeBlockRegex.exec(content)) !== null) {
+            // Add text before code block
+            if (match.index > lastIndex) {
+                parts.push({
+                    type: 'text',
+                    content: content.substring(lastIndex, match.index)
+                })
+            }
+            
+            // Add code block
+            parts.push({
+                type: 'code',
+                language: match[1] || 'text',
+                content: match[2].trim()
+            })
+            
+            lastIndex = match.index + match[0].length
+        }
+        
+        // Add remaining text
+        if (lastIndex < content.length) {
+            parts.push({
+                type: 'text',
+                content: content.substring(lastIndex)
+            })
+        }
+
+        // If no code blocks found, treat entire content as text
+        if (parts.length === 0) {
+            parts.push({ type: 'text', content })
+        }
+
+        return parts.map((part, partIndex) => {
+            if (part.type === 'code') {
                 return (
-                    <div key={index} className={`text-xs ${
-                        isDark ? 'text-gray-400' : 'text-gray-500'
-                    } mt-2`}>
-                        {lang && `${lang}`}
+                    <div key={partIndex} className="my-4 relative group">
+                        <div className={`flex items-center justify-between px-4 py-2 rounded-t-lg ${
+                            isDark ? 'bg-gray-800' : 'bg-gray-200'
+                        }`}>
+                            <span className={`text-xs font-semibold ${
+                                isDark ? 'text-gray-400' : 'text-gray-600'
+                            }`}>{part.language}</span>
+                            <button
+                                onClick={() => {
+                                    navigator.clipboard.writeText(part.content)
+                                }}
+                                className={`px-3 py-1 text-xs rounded flex items-center gap-1 ${
+                                    isDark 
+                                        ? 'bg-gray-700 hover:bg-gray-600 text-gray-300' 
+                                        : 'bg-white hover:bg-gray-100 text-gray-700'
+                                } transition-colors`}
+                            >
+                                📋 Copy code
+                            </button>
+                        </div>
+                        <pre className={`p-4 rounded-b-lg overflow-x-auto ${
+                            isDark ? 'bg-gray-900' : 'bg-gray-50'
+                        }`}>
+                            <code className={`text-sm ${
+                                isDark ? 'text-green-400' : 'text-gray-800'
+                            }`}>{part.content}</code>
+                        </pre>
                     </div>
                 )
             }
 
-            // Headers
-            if (line.startsWith('###')) {
-                return (
-                    <h3 key={index} className="text-lg font-bold mt-4 mb-2">
-                        {line.substring(3).trim()}
-                    </h3>
-                )
-            }
-            if (line.startsWith('##')) {
-                return (
-                    <h2 key={index} className="text-xl font-bold mt-4 mb-2">
-                        {line.substring(2).trim()}
-                    </h2>
-                )
-            }
+            // Render regular text with markdown support
+            const lines = part.content.split('\n')
+            return (
+                <div key={partIndex}>
+                    {lines.map((line, index) => {
+                        // Headers
+                        if (line.startsWith('###')) {
+                            return (
+                                <h3 key={index} className="text-lg font-bold mt-4 mb-2">
+                                    {line.substring(3).trim()}
+                                </h3>
+                            )
+                        }
+                        if (line.startsWith('##')) {
+                            return (
+                                <h2 key={index} className="text-xl font-bold mt-4 mb-2">
+                                    {line.substring(2).trim()}
+                                </h2>
+                            )
+                        }
 
-            // Bold text **text**
-            const boldRegex = /\*\*(.*?)\*\*/g
-            if (boldRegex.test(line)) {
-                const parts = line.split(boldRegex)
-                return (
-                    <p key={index} className="mb-2 leading-relaxed">
-                        {parts.map((part, i) => 
-                            i % 2 === 1 ? <strong key={i}>{part}</strong> : part
-                        )}
-                    </p>
-                )
-            }
+                        // Bold text **text**
+                        const boldRegex = /\*\*(.*?)\*\*/g
+                        if (boldRegex.test(line)) {
+                            const parts = line.split(boldRegex)
+                            return (
+                                <p key={index} className="mb-2 leading-relaxed">
+                                    {parts.map((part, i) => 
+                                        i % 2 === 1 ? <strong key={i}>{part}</strong> : part
+                                    )}
+                                </p>
+                            )
+                        }
 
-            // Bullet points
-            if (line.trim().startsWith('•') || line.trim().startsWith('-')) {
-                return (
-                    <li key={index} className="ml-4 mb-1">
-                        {line.trim().substring(1).trim()}
-                    </li>
-                )
-            }
+                        // Bullet points
+                        if (line.trim().startsWith('•') || line.trim().startsWith('-')) {
+                            return (
+                                <li key={index} className="ml-4 mb-1">
+                                    {line.trim().substring(1).trim()}
+                                </li>
+                            )
+                        }
 
-            // Code inline `code`
-            const codeRegex = /`([^`]+)`/g
-            if (codeRegex.test(line)) {
-                const parts = line.split(codeRegex)
-                return (
-                    <p key={index} className="mb-2 leading-relaxed font-mono">
-                        {parts.map((part, i) => 
-                            i % 2 === 1 ? (
-                                <code key={i} className={`px-1.5 py-0.5 rounded ${
-                                    isDark ? 'bg-gray-800 text-yellow-300' : 'bg-gray-200 text-orange-600'
-                                }`}>
-                                    {part}
-                                </code>
-                            ) : part
-                        )}
-                    </p>
-                )
-            }
+                        // Code inline `code`
+                        const codeRegex = /`([^`]+)`/g
+                        if (codeRegex.test(line)) {
+                            const parts = line.split(codeRegex)
+                            return (
+                                <p key={index} className="mb-2 leading-relaxed font-mono">
+                                    {parts.map((part, i) => 
+                                        i % 2 === 1 ? (
+                                            <code key={i} className={`px-1.5 py-0.5 rounded ${
+                                                isDark ? 'bg-gray-800 text-yellow-300' : 'bg-gray-200 text-orange-600'
+                                            }`}>
+                                                {part}
+                                            </code>
+                                        ) : part
+                                    )}
+                                </p>
+                            )
+                        }
 
-            // Horizontal rule
-            if (line.trim() === '---') {
-                return <hr key={index} className="my-4 border-gray-300 dark:border-gray-600" />
-            }
+                        // Horizontal rule
+                        if (line.trim() === '---') {
+                            return <hr key={index} className="my-4 border-gray-300 dark:border-gray-600" />
+                        }
 
-            // Regular paragraph
-            if (line.trim()) {
-                return (
-                    <p key={index} className="mb-2 leading-relaxed text-base">
-                        {line}
-                    </p>
-                )
-            }
+                        // Regular paragraph
+                        if (line.trim()) {
+                            return (
+                                <p key={index} className="mb-2 leading-relaxed text-base">
+                                    {line}
+                                </p>
+                            )
+                        }
 
-            return <br key={index} />
+                        return <br key={index} />
+                    })}
+                </div>
+            )
         })
     }
 
