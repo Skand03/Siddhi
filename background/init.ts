@@ -61,49 +61,11 @@ Text to fix:
       },
       {
          id: "side_summariseText",
-         title: "🔥 Summarise Selection",
+         title: "🔥 Summarise Text",
          contexts: ["selection"],
-         prompt: `Analyze the following content and create an accurate, comprehensive summary that captures all key information.
-
-Instructions:
-- Read the ENTIRE content carefully and identify all main points, facts, and important details
-- Preserve the original structure and organization of the content
-- Maintain the same formatting style (paragraphs, lists, headers) as the original
-- Keep the same tone and writing style
-- Include specific numbers, dates, names, and technical terms exactly as they appear
-- Do NOT add your own opinions, interpretations, or information not in the original
-- Do NOT skip important sections or details
-- Do NOT change the order or hierarchy of information
-- Write in clear, natural language without placeholders or brackets
-- Be thorough but concise - capture everything important without unnecessary repetition
-
-Provide a well-structured summary that someone could read to understand the complete essence of the original content.
+         prompt: `Create a clear and concise summary of the following text. Use proper paragraphs and formatting. Write naturally without placeholder text or brackets.
 
 Text to summarize:
-
-`,
-         functionType: "callAI-openSideBar",
-      },
-      {
-         id: "side_summarisePage",
-         title: "📄 Summarise This Page",
-         contexts: ["page"],
-         prompt: `Analyze the entire webpage content and create an accurate, comprehensive summary.
-
-Instructions:
-- Extract and read ALL visible text content from the page
-- Identify the main topic, purpose, and key sections of the page
-- Preserve the original structure and organization
-- Maintain the same formatting style (paragraphs, lists, headers)
-- Include specific numbers, dates, names, and technical terms exactly as they appear
-- Capture all important information, facts, and details
-- Do NOT add opinions or information not present on the page
-- Do NOT skip important sections
-- Write in clear, natural language
-
-Provide a complete summary organized by sections that captures the essence of the entire page.
-
-Page content to summarize:
 
 `,
          functionType: "callAI-openSideBar",
@@ -286,6 +248,57 @@ Code to convert:
 [Show a practical example of how to use this code]
 
 Code to document:
+
+`,
+         functionType: "callAI-openSideBar",
+      },
+      {
+         id: "side_videoSummary",
+         title: "🎥 Extract Video Details",
+         contexts: ["selection"],
+         prompt: `Analyze the following video transcript, description, or content and create a comprehensive, accurate summary from start to finish.
+
+**CRITICAL INSTRUCTIONS:**
+- Use the EXACT words and phrases from the video content
+- Maintain the original sequence of topics as they appear in the video
+- Preserve specific terminology, numbers, names, and technical terms
+- Do NOT paraphrase or use different words - stay true to the original content
+- Include timestamps if available
+- Capture all key points from beginning to end
+
+**Provide your response in this format:**
+
+**📺 Video Title/Topic:**
+[Main topic or title of the video]
+
+**⏱️ Duration/Length:**
+[Total length if mentioned]
+
+**📋 Complete Summary (Start to Finish):**
+
+**Introduction (0:00 - X:XX):**
+- [Exact key points using original words]
+- [Main concepts introduced]
+
+**Main Content:**
+- [Section 1 with exact details and terminology]
+- [Section 2 with exact details and terminology]
+- [Continue for all major sections]
+
+**Key Takeaways:**
+• [Important point 1 - using exact words from video]
+• [Important point 2 - using exact words from video]
+• [Important point 3 - using exact words from video]
+
+**Important Details:**
+- [Specific numbers, data, or facts mentioned]
+- [Names, dates, or references]
+- [Technical terms or definitions]
+
+**Conclusion:**
+[Final thoughts or closing remarks from the video]
+
+Video content to analyze:
 
 `,
          functionType: "callAI-openSideBar",
