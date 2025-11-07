@@ -63,7 +63,21 @@ Text to fix:
          id: "side_summariseText",
          title: "🔥 Summarise Text",
          contexts: ["selection"],
-         prompt: `Create a clear and concise summary of the following text. Use proper paragraphs and formatting. Write naturally without placeholder text or brackets.
+         prompt: `Analyze the following content and create an accurate, comprehensive summary that captures all key information.
+
+Instructions:
+- Read the ENTIRE content carefully and identify all main points, facts, and important details
+- Preserve the original structure and organization of the content
+- Maintain the same formatting style (paragraphs, lists, headers) as the original
+- Keep the same tone and writing style
+- Include specific numbers, dates, names, and technical terms exactly as they appear
+- Do NOT add your own opinions, interpretations, or information not in the original
+- Do NOT skip important sections or details
+- Do NOT change the order or hierarchy of information
+- Write in clear, natural language without placeholders or brackets
+- Be thorough but concise - capture everything important without unnecessary repetition
+
+Provide a well-structured summary that someone could read to understand the complete essence of the original content.
 
 Text to summarize:
 
