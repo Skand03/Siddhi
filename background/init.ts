@@ -185,21 +185,24 @@ Error to analyze:
          id: "side_codeConvert",
          title: "🔄 Convert Code",
          contexts: ["selection"],
-         prompt: `You are converting a code snippet. Return ONLY a single JSON object with no additional text, comments, or markdown.
+         prompt: `Convert the following code to another programming language. Assume the target language is JavaScript unless another language is explicitly mentioned in the code.
 
-Assume the target language is JavaScript unless another language is explicitly mentioned in the code.
+Provide your response in this format:
 
-The JSON must follow this exact schema:
+**Original Language:** [Name of the original language]
 
-{
-  "action_type": "CODE_CONVERT",
-  "result_data": {
-    "original_language": "[Original programming language]",
-    "target_language": "[Target language, default to JavaScript]",
-    "converted_code": "[Complete converted code snippet]",
-    "notes": "[Brief note on changes or assumptions made]"
-  }
-}
+**Target Language:** [Name of the target language]
+
+**Converted Code:**
+
+\`\`\`[target-language]
+[Complete converted code here - fully functional and ready to use]
+\`\`\`
+
+**Key Changes:**
+- [Explain important conversions or differences]
+- [Note any assumptions made]
+- [Highlight syntax or structure changes]
 
 Code to convert:
 
