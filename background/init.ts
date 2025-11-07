@@ -161,20 +161,26 @@ Claim to verify:
          id: "side_debugFix",
          title: "🐛 Debug & Fix",
          contexts: ["selection"],
-         prompt: `You are analyzing a stack trace or error message. Return ONLY a single JSON object with no additional text, comments, or markdown.
+         prompt: `Analyze the following error or stack trace and provide a clear, helpful solution.
 
-The JSON must follow this exact schema with ONLY these 3 fields:
+Provide your response in this format:
 
-{
-  "action_type": "DEBUG_FIX",
-  "result_data": {
-    "error_summary": "[A concise, one-sentence summary of the root cause]",
-    "explanation": "[Detailed explanation of why the error occurred]",
-    "suggested_fix_code": "[Complete corrected code snippet or clear fix example]"
-  }
-}
+**Error Summary:**
+[A clear one-sentence summary of what went wrong]
 
-Do not add any extra fields like language or confidence_score.
+**Explanation:**
+[Detailed explanation of why this error occurred, what causes it, and the underlying issue]
+
+**Solution:**
+
+\`\`\`[language]
+[Complete corrected code snippet with the fix applied]
+\`\`\`
+
+**What Changed:**
+- [Explain the specific fix applied]
+- [Note any important changes or considerations]
+- [Provide tips to avoid this error in the future]
 
 Error to analyze:
 
