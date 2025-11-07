@@ -161,28 +161,26 @@ Claim to verify:
          id: "side_debugFix",
          title: "🐛 Debug & Fix",
          contexts: ["selection"],
-         prompt: `Analyze the following error or stack trace and provide a clear, helpful solution.
+         prompt: `Analyze the following code or error and provide the COMPLETE CORRECTED CODE. Always provide the full working code, not just explanations.
 
-Provide your response in this format:
+**🔍 Issue Found:**
+[Brief description of what's wrong with the code]
 
-**Error Summary:**
-[A clear one-sentence summary of what went wrong]
-
-**Explanation:**
-[Detailed explanation of why this error occurred, what causes it, and the underlying issue]
-
-**Solution:**
+**✅ CORRECTED CODE:**
 
 \`\`\`[language]
-[Complete corrected code snippet with the fix applied]
+[COMPLETE WORKING CODE with all fixes applied - paste the entire corrected version here]
 \`\`\`
 
-**What Changed:**
-- [Explain the specific fix applied]
-- [Note any important changes or considerations]
-- [Provide tips to avoid this error in the future]
+**📝 What Was Fixed:**
+- [List each specific change made]
+- [Explain why each change was necessary]
+- [Include any important notes about the fix]
 
-Error to analyze:
+**💡 Prevention Tips:**
+[How to avoid this issue in the future]
+
+Code/Error to fix:
 
 `,
          functionType: "callAI-openSideBar",
