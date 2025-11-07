@@ -106,7 +106,9 @@ Code to analyze:
 
 Use this structure:
 
-Subject: Follow-up on [specific topic from the text]
+**Subject:** Follow-up on [specific topic from the text]
+
+**Email Body:**
 
 Hi [identify the actual recipient name from the text],
 
@@ -117,8 +119,6 @@ Following up on our discussion regarding [specific context]. Here are the key po
 • [action item with specific details]
 
 Please review and let me know your thoughts by [suggest appropriate deadline].
-
-Best regards
 
 Best regards
 
@@ -135,22 +135,22 @@ Text to create follow-up from:
          contexts: ["selection"],
          prompt: `Verify the accuracy of the following claim or statement. Use your knowledge and reasoning to fact-check it.
 
-Provide your response in this exact JSON format:
+Provide your response in this format:
 
-{
-  "action_type": "FACT_CHECK",
-  "result_data": {
-    "claim_status": "[VERIFIED, REFUTED, or NEEDS_MORE_CONTEXT]",
-    "verification_summary": "[One-sentence summary of the finding]",
-    "source_citation": {
-      "text": "[Title of reliable source]",
-      "url": "[URL of reliable source if available, or 'General knowledge']"
-    },
-    "context_note": "[Brief explanation of why the claim is true/false/uncertain, and any important context]"
-  }
-}
+**Claim Status:** [VERIFIED ✅ | REFUTED ❌ | NEEDS MORE CONTEXT ⚠️]
 
-Then, after the JSON, provide a detailed explanation in plain text.
+**Quick Summary:**
+[One clear sentence about whether the claim is true, false, or uncertain]
+
+**Detailed Explanation:**
+[Explain why the claim is verified/refuted/uncertain. Include relevant facts, context, and reasoning]
+
+**Sources & References:**
+- [List any reliable sources that support this finding]
+- [Include general knowledge if specific sources aren't available]
+
+**Additional Context:**
+[Any important nuances, limitations, or related information the user should know]
 
 Claim to verify:
 
