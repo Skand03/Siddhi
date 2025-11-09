@@ -10,6 +10,7 @@ import { ScrollArea } from "~components/ui/scroll-area"
 import { sendToBackground } from "@plasmohq/messaging"
 import { Separator } from "~components/ui/separator"
 import { Button } from "~components/ui/button"
+import { Input } from "~components/ui/input"
 
 // Indian Languages
 const INDIAN_LANGUAGES = [
@@ -27,6 +28,30 @@ const INDIAN_LANGUAGES = [
     { code: "as", name: "Assamese (অসমীয়া)", flag: "🇮🇳" },
     { code: "ur", name: "Urdu (اردو)", flag: "🇮🇳" },
     { code: "sa", name: "Sanskrit (संस्कृतम्)", flag: "🇮🇳" },
+]
+
+// Programming Languages for Code Conversion
+const PROGRAMMING_LANGUAGES = [
+    { code: "javascript", name: "JavaScript", icon: "🟨" },
+    { code: "typescript", name: "TypeScript", icon: "🔷" },
+    { code: "python", name: "Python", icon: "🐍" },
+    { code: "java", name: "Java", icon: "☕" },
+    { code: "csharp", name: "C#", icon: "🔵" },
+    { code: "cpp", name: "C++", icon: "⚙️" },
+    { code: "c", name: "C", icon: "🔧" },
+    { code: "go", name: "Go", icon: "🐹" },
+    { code: "rust", name: "Rust", icon: "🦀" },
+    { code: "php", name: "PHP", icon: "🐘" },
+    { code: "ruby", name: "Ruby", icon: "💎" },
+    { code: "swift", name: "Swift", icon: "🍎" },
+    { code: "kotlin", name: "Kotlin", icon: "🟣" },
+    { code: "r", name: "R", icon: "📊" },
+    { code: "matlab", name: "MATLAB", icon: "🔢" },
+    { code: "scala", name: "Scala", icon: "🔴" },
+    { code: "dart", name: "Dart", icon: "🎯" },
+    { code: "lua", name: "Lua", icon: "🌙" },
+    { code: "perl", name: "Perl", icon: "🐪" },
+    { code: "haskell", name: "Haskell", icon: "λ" },
 ]
 
 // Component to render formatted content with syntax highlighting
@@ -282,14 +307,59 @@ function IndexSidePanel() {
     const [theme, setTheme] = useState<"light" | "dark">("light")
     const [isSpeaking, setIsSpeaking] = useState(false)
     const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null)
+    const [isCodeConversion, setIsCodeConversion] = useState(false)
+    const [targetProgrammingLanguage, setTargetProgrammingLanguage] = useState("Python")
+    const [originalPrompt, setOriginalPrompt] = useState("")
+    const [originalSelectedText, setOriginalSelectedText] = useState("")
+    const [currentMenuItemId, setCurrentMenuItemId] = useState("")
+    const [isChatMode, setIsChatMode] = useState(false)
+    const [chatMessages, setChatMessages] = useState<Array<{role: 'user' | 'assistant', content: string}>>([])
+    const [chatInput, setChatInput] = useState("")
+    const [isSendingMessage, setIsSendingMessage] = useState(false)
+    const [showPromptBar, setShowPromptBar] = useState(false)
+    const [customPrompt, setCustomPrompt] = useState("")
 
     useEffect(() => {
         const messageListener = function (request, sender, sendResponse) {
             if (request.action === "send_to_sidepanel") {
+                console.log("📱 Sidepanel received message:", {
+                    menuItemId: request.menuItemId,
+                    hasPayload: !!request.payload,
+                    hasSelectedText: !!request.selectedText
+                })
+                
                 setData(request.payload)
                 setOriginalText(request.payload)
                 setSelectedLanguage("en") // Reset to English when new content arrives
                 stopSpeaking() // Stop any ongoing speech
+                
+                // Store the menu item ID for filename generation
+                setCurrentMenuItemId(request.menuItemId || "")
+                
+                // Check if this is a chat request (Let's Talk about this)
+                if (request.menuItemId === "callPhoneToTalkAboutSelection") {
+                    console.log("✅ Activating chat mode")
+                    setIsChatMode(true)
+                    setIsCodeConversion(false)
+                    setOriginalSelectedText(request.selectedText || "")
+                    setOriginalPrompt(request.prompt || "")
+                    setCustomPrompt(request.prompt || "")
+                    setShowPromptBar(true)
+                    // Initialize chat with the AI's first message
+                    setChatMessages([{
+                        role: 'assistant',
+                        content: request.payload
+                    }])
+                } else if (request.menuItemId === "side_codeConvert") {
+                    setIsChatMode(false)
+                    setIsCodeConversion(true)
+                    setOriginalSelectedText(request.selectedText || "")
+                    setOriginalPrompt(request.prompt || "")
+                } else {
+                    setIsChatMode(false)
+                    setIsCodeConversion(false)
+                    setTargetProgrammingLanguage("python") // Reset to default
+                }
             }
         }
 
@@ -352,6 +422,140 @@ function IndexSidePanel() {
             setData(`❌ Error: ${error.message}`)
         } finally {
             setIsTranslating(false)
+        }
+    }
+
+    const handleProgrammingLanguageChange = async (langCode: string) => {
+        // Stop any ongoing speech
+        stopSpeaking()
+        
+        setTargetProgrammingLanguage(langCode)
+        setIsTranslating(true)
+        
+        try {
+            const targetLang = PROGRAMMING_LANGUAGES.find(lang => lang.code === langCode)
+            if (!targetLang) {
+                setData("❌ Error: Invalid programming language selected")
+                return
+            }
+
+            // Create a new prompt with the selected target language
+            const conversionPrompt = `Convert the following code to ${targetLang.name}. Provide your response in this format:
+
+**Original Language:** [Name of the original language]
+
+**Target Language:** ${targetLang.name}
+
+**Converted Code:**
+
+\`\`\`${langCode}
+[Complete converted code here - fully functional and ready to use]
+\`\`\`
+
+**Key Changes:**
+- [Explain important conversions or differences]
+- [Note any assumptions made]
+- [Highlight syntax or structure changes]
+
+Code to convert:
+
+`
+
+            const response = await sendToBackground({
+                name: "callOpenAIReturn",
+                body: { 
+                    prompt: conversionPrompt,
+                    selectedText: originalSelectedText 
+                }
+            })
+            
+            if (response.errorMessage) {
+                setData(`❌ Conversion Error: ${response.errorMessage}`)
+            } else {
+                setData(response.data)
+            }
+        } catch (error) {
+            setData(`❌ Error: ${error.message}`)
+        } finally {
+            setIsTranslating(false)
+        }
+    }
+
+    const handleStartChatWithPrompt = async () => {
+        setShowPromptBar(false)
+        setIsSendingMessage(true)
+        
+        try {
+            const response = await sendToBackground({
+                name: "callOpenAIReturn",
+                body: { 
+                    prompt: customPrompt,
+                    selectedText: originalSelectedText
+                }
+            })
+
+            if (response.errorMessage) {
+                setChatMessages([{ 
+                    role: 'assistant', 
+                    content: `❌ Error: ${response.errorMessage}` 
+                }])
+            } else {
+                setChatMessages([{ 
+                    role: 'assistant', 
+                    content: response.data 
+                }])
+            }
+        } catch (error) {
+            setChatMessages([{ 
+                role: 'assistant', 
+                content: `❌ Error: ${error.message}` 
+            }])
+        } finally {
+            setIsSendingMessage(false)
+        }
+    }
+
+    const handleSendChatMessage = async () => {
+        if (!chatInput.trim() || isSendingMessage) return
+
+        const userMessage = chatInput.trim()
+        setChatInput("")
+        
+        // Add user message to chat
+        const updatedMessages = [...chatMessages, { role: 'user' as const, content: userMessage }]
+        setChatMessages(updatedMessages)
+        setIsSendingMessage(true)
+
+        try {
+            // Build conversation context
+            const conversationContext = `Original text being discussed:\n${originalSelectedText}\n\nConversation history:\n${updatedMessages.map(msg => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`).join('\n\n')}`
+
+            const response = await sendToBackground({
+                name: "callOpenAIReturn",
+                body: { 
+                    prompt: `You are having a helpful conversation about the text. Continue the conversation naturally based on the user's question. Be concise and helpful.`,
+                    selectedText: conversationContext
+                }
+            })
+
+            if (response.errorMessage) {
+                setChatMessages([...updatedMessages, { 
+                    role: 'assistant', 
+                    content: `❌ Error: ${response.errorMessage}` 
+                }])
+            } else {
+                setChatMessages([...updatedMessages, { 
+                    role: 'assistant', 
+                    content: response.data 
+                }])
+            }
+        } catch (error) {
+            setChatMessages([...updatedMessages, { 
+                role: 'assistant', 
+                content: `❌ Error: ${error.message}` 
+            }])
+        } finally {
+            setIsSendingMessage(false)
         }
     }
 
@@ -558,6 +762,74 @@ function IndexSidePanel() {
         return INDIAN_LANGUAGES.find(lang => lang.code === selectedLanguage) || INDIAN_LANGUAGES[0]
     }
 
+    const getFileNamePrefix = () => {
+        // Map menu item IDs to readable filenames
+        const menuItemNames = {
+            'side_summariseText': 'summary',
+            'side_codeConvert': 'code-conversion',
+            'side_codeAnalysis': 'code-analysis',
+            'side_debugFix': 'debug-fix',
+            'side_generateDoc': 'documentation',
+            'side_factCheck': 'fact-check',
+            'side_actionChainFollowup': 'followup',
+            'callPhoneToTalkAboutSelection': 'voice-discussion',
+            'grammarFixer': 'grammar-fix',
+            'postComment': 'comment',
+            'linkedinPostEmoji': 'emoji-comment'
+        }
+        
+        return menuItemNames[currentMenuItemId] || 'siddhi'
+    }
+
+    const getDisplayName = () => {
+        // Map menu item IDs to display names for the UI
+        const displayNames = {
+            'side_summariseText': 'Summary',
+            'side_codeConvert': 'Code Conversion',
+            'side_codeAnalysis': 'Code Analysis',
+            'side_debugFix': 'Debug & Fix',
+            'side_generateDoc': 'Documentation',
+            'side_factCheck': 'Fact Check',
+            'side_actionChainFollowup': 'Follow-up',
+            'callPhoneToTalkAboutSelection': 'Chat Discussion',
+            'grammarFixer': 'Grammar Fix',
+            'postComment': 'Comment',
+            'linkedinPostEmoji': 'Emoji Comment'
+        }
+        
+        return displayNames[currentMenuItemId] || 'Siddhi AI'
+    }
+
+    const handleDownload = () => {
+        // Create a clean version of the content
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5)
+        const filePrefix = getFileNamePrefix()
+        const displayName = getDisplayName()
+        const filename = `${filePrefix}-${timestamp}.md`
+        
+        // Prepare content with metadata
+        const downloadContent = `# ${displayName} - Siddhi AI
+Generated: ${new Date().toLocaleString()}
+Language: ${getCurrentLanguageInfo().name}
+Operation: ${displayName}
+
+---
+
+${data}
+`
+        
+        // Create blob and download
+        const blob = new Blob([downloadContent], { type: 'text/markdown;charset=utf-8' })
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = filename
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        URL.revokeObjectURL(url)
+    }
+
     const isError = data.startsWith("❌")
 
     // Theme colors
@@ -596,7 +868,14 @@ function IndexSidePanel() {
             {/* Header */}
             <div className={`p-4 ${colors.border} border-b ${colors.headerBg}`}>
                 <div className="flex items-center justify-between">
-                    <HeroTitle color={theme === "light" ? "black" : "white"} />
+                    <div className="flex flex-col">
+                        <HeroTitle color={theme === "light" ? "black" : "white"} />
+                        {currentMenuItemId && (
+                            <span className={`text-xs ${colors.textSecondary} mt-1`}>
+                                {getDisplayName()}
+                            </span>
+                        )}
+                    </div>
                     <Button 
                         variant="outline" 
                         size="sm"
@@ -628,6 +907,15 @@ function IndexSidePanel() {
                             >
                                 {isSpeaking ? "🔇 Stop" : "🔊 Listen"}
                             </Button>
+                            <Button 
+                                variant="outline" 
+                                size="sm"
+                                onClick={handleDownload}
+                                disabled={isTranslating || data === "Loading..." || isError}
+                                className={`${colors.selectBg} ${colors.selectText} ${colors.border} px-2 py-1`}
+                            >
+                                📥 Save
+                            </Button>
                         </div>
                     </div>
                     <Select value={selectedLanguage} onValueChange={handleLanguageChange} disabled={isTranslating}>
@@ -648,46 +936,205 @@ function IndexSidePanel() {
                 </div>
             </div>
 
+            {/* Programming Language Selector Section - Only shown for code conversion */}
+            {isCodeConversion && (
+                <div className={`p-4 ${colors.border} border-b ${colors.sectionBg}`}>
+                    <div className="flex flex-col gap-2">
+                        <div className="flex items-center justify-between">
+                            <label className={`text-sm font-semibold ${colors.text}`}>
+                                💻 Target Programming Language
+                            </label>
+                            <Badge variant="secondary" className={`text-xs ${colors.badgeBg} ${colors.badgeText}`}>
+                                {PROGRAMMING_LANGUAGES.find(lang => lang.code === targetProgrammingLanguage)?.icon}{" "}
+                                {PROGRAMMING_LANGUAGES.find(lang => lang.code === targetProgrammingLanguage)?.name}
+                            </Badge>
+                        </div>
+                        <Select 
+                            value={targetProgrammingLanguage} 
+                            onValueChange={handleProgrammingLanguageChange} 
+                            disabled={isTranslating}
+                        >
+                            <SelectTrigger className={`w-full ${colors.selectBg} ${colors.selectText} ${colors.border}`}>
+                                <SelectValue placeholder="Select target language" />
+                            </SelectTrigger>
+                            <SelectContent className={colors.selectBg}>
+                                {PROGRAMMING_LANGUAGES.map((lang) => (
+                                    <SelectItem key={lang.code} value={lang.code} className={colors.selectText}>
+                                        <span className="flex items-center gap-2">
+                                            <span>{lang.icon}</span>
+                                            <span>{lang.name}</span>
+                                        </span>
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </div>
+            )}
+
             {/* Content Section */}
             <ScrollArea className={`flex-1 ${colors.bg}`}>
                 <div className="p-4">
-                    <Card className={`border-none shadow-none ${colors.cardBg}`}>
-                        <CardHeader className="px-0 pt-0">
-                            <CardTitle className={`text-lg flex items-center gap-2 ${colors.text}`}>
+                    {isChatMode ? (
+                        /* Chat Interface */
+                        <div className="flex flex-col h-full">
+                            <Card className={`border-none shadow-none ${colors.cardBg} flex-1 flex flex-col`}>
+                                <CardHeader className="px-0 pt-0">
+                                    <CardTitle className={`text-lg flex items-center gap-2 ${colors.text}`}>
+                                        <span>💬</span>
+                                        <span>Chat Discussion</span>
+                                    </CardTitle>
+                                    <Separator className={`mt-2 ${colors.separatorBg}`} />
+                                </CardHeader>
+                                <CardContent className="px-0 pb-0 flex-1 flex flex-col">
+                                    {/* Prompt Bar - shown before chat starts */}
+                                    {showPromptBar && (
+                                        <div className={`mb-4 p-4 rounded-lg border ${colors.border} ${colors.sectionBg}`}>
+                                            <div className="flex flex-col gap-3">
+                                                <div className="flex items-center justify-between">
+                                                    <label className={`text-sm font-semibold ${colors.text}`}>
+                                                        ✏️ Customize Your Prompt
+                                                    </label>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        onClick={() => setCustomPrompt(originalPrompt)}
+                                                        className="text-xs"
+                                                    >
+                                                        Reset
+                                                    </Button>
+                                                </div>
+                                                <textarea
+                                                    value={customPrompt}
+                                                    onChange={(e) => setCustomPrompt(e.target.value)}
+                                                    className={`w-full min-h-[120px] p-3 rounded-md border ${colors.border} ${colors.selectBg} ${colors.selectText} text-sm resize-y`}
+                                                    placeholder="Enter your custom prompt..."
+                                                />
+                                                <div className="flex gap-2">
+                                                    <Button
+                                                        onClick={handleStartChatWithPrompt}
+                                                        disabled={!customPrompt.trim() || isSendingMessage}
+                                                        className="flex-1"
+                                                    >
+                                                        {isSendingMessage ? "Starting..." : "Start Chat"}
+                                                    </Button>
+                                                    <Button
+                                                        variant="outline"
+                                                        onClick={() => setShowPromptBar(false)}
+                                                        disabled={isSendingMessage}
+                                                    >
+                                                        Skip
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                    {/* Chat Messages */}
+                                    <div className="flex-1 overflow-y-auto space-y-4 mb-4">
+                                        {chatMessages.map((message, index) => (
+                                            <div 
+                                                key={index} 
+                                                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                                            >
+                                                <div 
+                                                    className={`max-w-[80%] rounded-lg p-3 ${
+                                                        message.role === 'user' 
+                                                            ? theme === 'light' 
+                                                                ? 'bg-blue-500 text-white' 
+                                                                : 'bg-blue-600 text-white'
+                                                            : theme === 'light'
+                                                                ? 'bg-gray-200 text-gray-900'
+                                                                : 'bg-gray-700 text-gray-100'
+                                                    }`}
+                                                >
+                                                    <div className="text-sm">
+                                                        <FormattedContent content={message.content} theme={theme} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                        {isSendingMessage && (
+                                            <div className="flex justify-start">
+                                                <div className={`rounded-lg p-3 ${theme === 'light' ? 'bg-gray-200' : 'bg-gray-700'}`}>
+                                                    <div className="flex gap-1">
+                                                        <span className="animate-bounce">●</span>
+                                                        <span className="animate-bounce delay-100">●</span>
+                                                        <span className="animate-bounce delay-200">●</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                    
+                                    {/* Chat Input */}
+                                    <div className="flex gap-2 pt-2 border-t">
+                                        <Input
+                                            value={chatInput}
+                                            onChange={(e) => setChatInput(e.target.value)}
+                                            onKeyPress={(e) => {
+                                                if (e.key === 'Enter' && !e.shiftKey) {
+                                                    e.preventDefault()
+                                                    handleSendChatMessage()
+                                                }
+                                            }}
+                                            placeholder="Type your message..."
+                                            disabled={isSendingMessage}
+                                            className={`flex-1 ${colors.selectBg} ${colors.selectText} ${colors.border}`}
+                                        />
+                                        <Button
+                                            onClick={handleSendChatMessage}
+                                            disabled={!chatInput.trim() || isSendingMessage}
+                                            className="px-4"
+                                        >
+                                            {isSendingMessage ? "..." : "Send"}
+                                        </Button>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </div>
+                    ) : (
+                        /* Regular Content Display */
+                        <Card className={`border-none shadow-none ${colors.cardBg}`}>
+                            <CardHeader className="px-0 pt-0">
+                                <CardTitle className={`text-lg flex items-center gap-2 ${colors.text}`}>
+                                    {isTranslating ? (
+                                        <>
+                                            <span className="animate-pulse">🔄</span>
+                                            <span>Processing...</span>
+                                        </>
+                                    ) : isError ? (
+                                        <>
+                                            <span>❌</span>
+                                            <span>Error</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <span>📄</span>
+                                            <span>{getDisplayName()}</span>
+                                        </>
+                                    )}
+                                </CardTitle>
+                                <Separator className={`mt-2 ${colors.separatorBg}`} />
+                            </CardHeader>
+                            <CardContent className="px-0 pb-0">
                                 {isTranslating ? (
-                                    <>
-                                        <span className="animate-pulse">🔄</span>
-                                        <span>Translating...</span>
-                                    </>
-                                ) : isError ? (
-                                    <>
-                                        <span>❌</span>
-                                        <span>Error</span>
-                                    </>
+                                    <div className="flex flex-col items-center justify-center py-8 gap-4">
+                                        <div className="animate-spin text-4xl">⚙️</div>
+                                        <p className={`text-sm ${colors.textSecondary}`}>
+                                            {selectedLanguage !== "en" 
+                                                ? `Translating to ${getCurrentLanguageInfo().name.split(" (")[0]}...`
+                                                : `Processing ${getDisplayName()}...`
+                                            }
+                                        </p>
+                                    </div>
                                 ) : (
-                                    <>
-                                        <span>📄</span>
-                                        <span>Summary</span>
-                                    </>
+                                    <div className={`${isError ? "text-red-600" : colors.text}`}>
+                                        <FormattedContent content={data} theme={theme} />
+                                    </div>
                                 )}
-                            </CardTitle>
-                            <Separator className={`mt-2 ${colors.separatorBg}`} />
-                        </CardHeader>
-                        <CardContent className="px-0 pb-0">
-                            {isTranslating ? (
-                                <div className="flex flex-col items-center justify-center py-8 gap-4">
-                                    <div className="animate-spin text-4xl">⚙️</div>
-                                    <p className={`text-sm ${colors.textSecondary}`}>
-                                        Translating to {getCurrentLanguageInfo().name.split(" (")[0]}...
-                                    </p>
-                                </div>
-                            ) : (
-                                <div className={`${isError ? "text-red-600" : colors.text}`}>
-                                    <FormattedContent content={data} theme={theme} />
-                                </div>
-                            )}
-                        </CardContent>
-                    </Card>
+                            </CardContent>
+                        </Card>
+                    )}
                 </div>
             </ScrollArea>
 

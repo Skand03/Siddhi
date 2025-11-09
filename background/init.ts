@@ -202,55 +202,24 @@ Code/Error to fix:
          id: "side_codeConvert",
          title: "🔄 Convert Code",
          contexts: ["selection"],
-         prompt: `Convert the selected code to another programming language.
+         prompt: `Convert the following code to another programming language. The target language will be selected from the dropdown in the sidebar.
 
-**Step 1: Detect Original Language**
-First, identify what language the code is written in.
+Provide your response in this format:
 
-**Step 2: Show Language Options**
-Present the following options with clear numbering and emojis:
+**Original Language:** [Name of the original language]
 
----
-**🎯 Select Target Language:**
+**Target Language:** [Name of the target language]
 
-1. 🟨 **JavaScript** - Modern ES6+
-2. 🐍 **Python** - Python 3.x
-3. ☕ **Java** - Java 11+
-4. ⚡ **C++** - C++17/20
-5. 🔷 **C#** - .NET 6+
-6. 💙 **TypeScript** - Latest
-7. 🔵 **Go** - Go 1.20+
-8. 🦀 **Rust** - Latest
-9. 🐘 **PHP** - PHP 8+
-10. 💎 **Ruby** - Ruby 3+
-11. 🍎 **Swift** - Swift 5+
-12. 🤖 **Kotlin** - Latest
-13. 🔢 **R** - For data science
-14. 🎨 **Dart** - Flutter
-15. ⚙️ **Other** - Specify below
-
----
-
-After user selects, provide the conversion with this professional format:
-
-**📝 Original Language:** [Detected language]
-
-**🎯 Target Language:** [User's choice]
-
-**✅ CONVERTED CODE:**
+**Converted Code:**
 
 \`\`\`[target-language]
-[Complete, working, production-ready converted code]
+[Complete converted code here - fully functional and ready to use]
 \`\`\`
 
-**🔄 Key Changes:**
-- [List specific syntax changes]
-- [Note library/framework equivalents]
-- [Explain structural differences]
-- [Highlight language-specific optimizations]
-
-**💡 Important Notes:**
-[Dependencies needed, setup instructions, or caveats]
+**Key Changes:**
+- [Explain important conversions or differences]
+- [Note any assumptions made]
+- [Highlight syntax or structure changes]
 
 Code to convert:
 
@@ -301,7 +270,7 @@ Begin the conversation naturally and wait for my questions.
 Text to discuss:
 
 `,
-         functionType: "callVoice-ExternalNumber",
+         functionType: "callAI-openSideBar",
       },
       {
          id: "linkedinPostEmoji",

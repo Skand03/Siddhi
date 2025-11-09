@@ -99,7 +99,12 @@ const SelectionMenu = () => {
             
         await sendToBackground({ 
             name: "sendToSidepanel", 
-            body: { data: messageToSend } 
+            body: { 
+                data: messageToSend,
+                menuItemId: element.id,
+                selectedText: selectedText,
+                prompt: element.prompt
+            } 
         });
     };
 
@@ -111,7 +116,7 @@ const SelectionMenu = () => {
 
         //THIS THING NEED TO BE BEFORE THE BLOODY storage yet again... 
         const itemId = info.id as String;
-        if (itemId.startsWith("side_")) {
+        if (itemId.startsWith("side_") || itemId === "callPhoneToTalkAboutSelection") {
             await sendToBackground({
                 name: "openSidePanel"
             })
@@ -157,7 +162,6 @@ const SelectionMenu = () => {
             const contextConfigItems =
                 (await initializeStorage()) as unknown as chrome.contextMenus.CreateProperties[];
             const cleanedContextMenuItems = cleanProperties(contextConfigItems);
-            console.log('SelectionMenu: Loaded menu items:', cleanedContextMenuItems);
             setMenuItems(cleanedContextMenuItems)
         }
         initialize();
@@ -191,15 +195,11 @@ const SelectionMenu = () => {
                         <CommandList>
                             <CommandEmpty>No results found.</CommandEmpty>
                             <CommandGroup >
-                                {menuItems.length === 0 ? (
-                                    <div className="text-white p-4">Loading options...</div>
-                                ) : (
-                                    menuItems.map((item) => (
-                                        <CommandItem className="cursor-pointer opacity-50 hover:opacity-100 hover:bg-[#505050] font-bold m-1 rounded-[5px] py-1 text-[16px]" key={item.id} value={item.title} onSelect={() => handleMenuItemClick(item)}>
-                                            <span className="text-white">{item.title}</span>
-                                        </CommandItem>
-                                    ))
-                                )}
+                                {menuItems.map((item) => (
+                                    <CommandItem className="cursor-pointer opacity-50 hover:opacity-100 hover:bg-[#505050] font-bold m-1 rounded-[5px] py-1 text-[16px]" key={item.id} value={item.title} onSelect={() => handleMenuItemClick(item)}>
+                                        <span className="text-white">{item.title}</span>
+                                    </CommandItem>
+                                ))}
                             </CommandGroup>
                         </CommandList>
                     </Command>

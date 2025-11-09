@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block title %}Settings - Siddhi{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <h2 class="text-3xl font-bold gradient-text mb-8">⚙️ Settings</h2>
+
+    <div class="bg-white rounded-lg shadow-lg p-8 mb-6">
+        <h3 class="text-xl font-bold mb-6">🤖 AI Provider Settings</h3>
+        
+        <div class="space-y-4">
+            <div>
+                <label class="block font-semibold mb-2">Provider</label>
+                <select id="llmProvider" class="w-full p-3 border rounded-lg">
+                    <option value="groq">Groq</option>
+                    <option value="openai">OpenAI</option>
+                    <option value="together">Together AI</option>
+                    <option value="gemini">Google Gemini</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block font-semibold mb-2">Model</label>
+                <input type="text" 
+                       id="llmModel" 
+                       class="w-full p-3 border rounded-lg"
+                       value="llama-3.1-70b-versatile"
+                       placeholder="e.g., llama-3.1-70b-versatile">
+            </div>
+
+            <div>
+                <label class="block font-semibold mb-2">OpenAI API Key</label>
+                <input type="password" 
+                       id="openaiKey" 
+                       class="w-full p-3 border rounded-lg"
+                       placeholder="sk-...">
+            </div>
+
+            <div>
+                <label class="block font-semibold mb-2">Groq API Key</label>
+                <input type="password" 
+                       id="groqKey" 
+                       class="w-full p-3 border rounded-lg"
+                       placeholder="gsk_...">
+            </div>
+
+            <div>
+                <label class="block font-semibold mb-2">Together AI API Key</label>
+                <input type="password" 
+                       id="togetherKey" 
+                       class="w-full p-3 border rounded-lg"
+                       placeholder="...">
+            </div>
+
+            <div>
+                <label class="block font-semibold mb-2">Gemini API Key</label>
+                <input type="password" 
+                       id="geminiKey" 
+                       class="w-full p-3 border rounded-lg"
+                       placeholder="...">
+            </div>
+
+            <div>
+                <label class="flex items-center space-x-2">
+                    <input type="checkbox" id="debugMode" class="w-5 h-5">
+                    <span class="font-semibold">Enable Debug Mode</span>
+                </label>
+            </div>
+
+            <button onclick="saveSettings()" 
+                    class="w-full gradient-bg text-white py-3 rounded-lg font-semibold hover:opacity-90 transition">
+                Save Settings
+            </button>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-lg p-8">
+        <h3 class="text-xl font-bold mb-6">📝 Custom Prompts</h3>
+        <p class="text-gray-600 mb-4">Manage your custom prompt templates</p>
+        
+        <div id="promptsList" class="space-y-4">
+            <!-- Prompts will be loaded here -->
+        </div>
+
+        <button onclick="addNewPrompt()" 
+                class="mt-4 w-full border-2 border-dashed border-gray-300 py-3 rounded-lg hover:border-purple-500 hover:text-purple-500 transition">
+            + Add New Prompt
+        </button>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function saveSettings() {
+    const settings = {
+        llm_provider: document.getElementById('llmProvider').value,
+        llm_model: document.getElementById('llmModel').value,
+        openai_api_key: document.getElementById('openaiKey').value,
+        groq_api_key: document.getElementById('groqKey').value,
+        together_api_key: document.getElementById('togetherKey').value,
+        gemini_api_key: document.getElementById('geminiKey').value,
+        debug_mode: document.getElementById('debugMode').checked
+    };
+    
+    try {
+        // Save to localStorage for demo (in production, save to backend)
+        localStorage.setItem('siddhiSettings', JSON.stringify(settings));
+        alert('Settings saved successfully!');
+    } catch (error) {
+        alert('Error saving settings: ' + error.message);
+    }
+}
+
+function loadSettings() {
+    try {
+        const settings = JSON.parse(localStorage.getItem('siddhiSettings') || '{}');
+        
+        if (settings.llm_provider) {
+            document.getElementById('llmProvider').value = settings.llm_provider;
+        }
+        if (settings.llm_model) {
+            document.getElementById('llmModel').value = settings.llm_model;
+        }
+        if (settings.debug_mode) {
+            document.getElementById('debugMode').checked = settings.debug_mode;
+        }
+    } catch (error) {
+        console.error('Error loading settings:', error);
+    }
+}
+
+function addNewPrompt() {
+    alert('Custom prompt creation coming soon!');
+}
+
+// Load settings on page load
+loadSettings();
+</script>
+{% endblock %}
